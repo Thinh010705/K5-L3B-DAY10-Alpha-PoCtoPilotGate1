@@ -1,6 +1,6 @@
 # Phiếu C · Sự cố và quyết định v2 · Khối 3 (phút 125–200)
 
-**Bàn:** Nhóm Alpha (K5-L3B-DAY10-Alpha-PoCtoPilotGate1) · **Thẻ đã bốc:** S5 *(để trống tới phút 125; bốc số xong thì ghi đúng số đó, ví dụ `S3`. Lab Coach đối chiếu với sổ; lệnh tự kiểm tra in dòng này trong report.)*
+**Bàn:** K5-L3B-DAY10-Alpha-PoCtoPilotGate1 · **Thẻ đã bốc:** S5 (CFO) *(để trống tới phút 125; bốc số xong thì ghi đúng số đó, ví dụ `S3`. Lab Coach đối chiếu với sổ; lệnh tự kiểm tra in dòng này trong report.)*
 
 Mở `incidents/Sx/card.md` của đúng số đã bốc. Các bước trên thẻ trỏ về đúng mục trong phiếu này. Mục C3 chỉ điền phần ứng với
 số thẻ của bàn; các phần khác để trống.
@@ -30,10 +30,10 @@ Mỗi lệnh `lab10.eval` và `lab10.grade` tự ghi một dòng vào `runs/jour
 
 | # | Mã lần chạy | Bộ ticket · mốc | Đổi MỘT thứ gì so với lần trước | pass_rate (khoảng tin cậy 95%) | pass_k | Hoàn sai (đ) · lỗi hãng oan · lộ dữ liệu | Tỉ lệ chuyển người | Kết luận (một câu) |
 |---|---|---|---|---|---|---|---|---|
-| 1 | | Sx · prepared | nhận thẻ đã bốc, chưa sửa thêm (đúng cổng vòng 1 đã chốt) | | | | | |
-| 2 | | Sx · after | | | | | | |
-| 3 | | Sx · after | | | | | | |
-| 4 | | base · after | (kiểm không regression) | | | | | |
+| 1 | `R-S5-before-20261119-164353-c6b996` | S5 · base | Thẻ S5, cổng mặc định chưa áp dụng | 0,8333 [0,7000; 0,9667] | 0,8333 | 890.000 · 20 · 0 | 0,40 | ROI -0,33; LLM cao nhất 2.412đ > trần 1.500đ; HCM-B2B 11.326đ/ticket > làm tay 10.000đ. |
+| 2 | `R-S5-prepared-20261119-164353-c6b996` | S5 · prepared | Áp dụng cổng vòng 1 đã chốt `099fd671` | 0,8333 [0,7000; 0,9667] | 0,8333 | 890.000 · 20 · 0 | 0,50 | Chi phí 6.554đ/ticket chung nhưng ROI -0,38; HCM-B2B 10.382đ/ticket vẫn > làm tay; LLM cao nhất giảm còn 768đ. |
+| 3 | `R-S5-after-20261119-164353-c6b996` | S5 · after | Không có thay đổi sau prepared trong snapshot này | 0,8333 [0,7000; 0,9667] | 0,8333 | 890.000 · 20 · 0 | 0,50 | Không cải thiện so với prepared; ROI -0,38 và HCM-B2B 10.382đ/ticket vẫn vượt. |
+| 4 | `R-base-after-20261119-164939-c6b996` | base · after | Kiểm tra hồi quy sau sửa S5 | 1,0000 [1,0000; 1,0000] | 1,0000 | hoàn sai 0 · lỗi hãng oan 0 · PII 0 | 0,2273 | Đạt 110/110 trial, không có vượt trần; 0 ca mới hỏng. Chi phí 4.456đ/ticket, ROI 1,24; 0 ca ùn. Nhóm kho “?” vẫn 10.359đ/ticket nhưng chỉ có 5 trial. |
 
 ---
 
@@ -47,14 +47,14 @@ Chạy **trước khi sửa bất cứ thứ gì**:
 python3 -m lab10.grade --incident Sx
 ```
 
-- Mã lần chạy grade: `__________` · base: `__________` · prepared: `__________`
-- Cổng vòng 1 đỡ được ô / con số nào (so cột base với cột prepared): …
-- Khối kinh doanh và vận hành còn dòng nào vượt trần: …
+- Mã lần chạy grade: `R-S5-grade-20261119-164353-c6b996` · base: `R-S5-before-20261119-164353-c6b996` · prepared: `R-S5-prepared-20261119-164353-c6b996`
+- Cổng vòng 1 đỡ được ô / con số nào (so cột base với cột prepared): Bộ nền cải thiện từ pass_rate 0,9909 lên 1,0, hoàn sai từ 20.000đ về 0, lỗi hãng oan từ 1 về 0. Trên thẻ S5, pass_rate và các tác hại không đổi: pass_rate 0,8333, hoàn sai 890.000đ, lỗi hãng oan 20 ở cả base và prepared.
+- Khối kinh doanh và vận hành còn dòng nào vượt trần: ROI prepared -0,38 < 0,25; HCM-B2B tốn 10.382đ/ticket > 10.000đ làm tay; tiền LLM cao nhất ở base là 2.412đ > trần 1.500đ. After vẫn còn hai dòng vượt là ROI -0,38 và HCM-B2B 10.382đ/ticket. Không có ca ùn; một người trực, công suất 6 ca/giờ.
 
 **Mở lại pre-mortem (Phiếu B mục B6), viết bằng bút khác màu.** Với thẻ S1, S3, S4, S5 đây là một phần của phần riêng theo thẻ.
 
-- Sự cố trên thẻ thuộc lăng kính nào (kỹ thuật, kinh doanh, con người và vận hành, pháp lý)? …
-- Có nằm trong các lý do bàn đã viết không? Nếu có: cổng vòng 1 đã đỡ được bao nhiêu (đọc cột prepared trong report)? Nếu không: vì sao cả bàn không nghĩ tới? …
+- Sự cố trên thẻ thuộc lăng kính nào (kỹ thuật, kinh doanh, con người và vận hành, pháp lý)? **Kinh doanh**, với nhánh nguyên nhân vận hành là tỷ lệ chuyển người cao theo phân khúc và chi phí LLM phụ thuộc độ dài nội dung.
+- Có nằm trong các lý do bàn đã viết không? Nếu có: cổng vòng 1 đã đỡ được bao nhiêu (đọc cột prepared trong report)? Nếu không: vì sao cả bàn không nghĩ tới? **B6 đã dự báo chi phí theo nhóm có thể bị che bởi trung bình chung, nhưng chưa lường riêng phí LLM vượt trần và tổn thất do hoàn trùng.** Ở prepared, chi phí S5 là 6.554đ/ticket, ROI -0,38; kho HCM-B2B là 10.382đ/ticket. Tỷ lệ chuyển người tăng từ 0,40 lên 0,50. Trần LLM không bắt được mọi vấn đề chi phí vì base có ticket tốn 2.412đ nhưng prepared/after còn 768đ.
 - Lý do còn thiếu, thêm bây giờ:
 
 | Lý do thất bại (viết ở thì quá khứ) | Lăng kính | Kiểm được bằng gì (trace / data / config nào) |
@@ -221,7 +221,7 @@ Mở lại Phiếu B mục B3. Ghi ở đây những dòng đổi so với vòng
 | Trường / bảng | Vòng 1 bàn đã coi là (nguồn sự thật / bản sao / chưa hỏi) | Sau khi đọc thẻ thì thấy | Ảnh hưởng tới tiền hay lỗi hãng thế nào |
 |---|---|---|---|
 | | | | |
-| | | | |
+| Chi phí mỗi ticket vượt mức làm tay ở nhóm kho sỉ và biến động theo độ dài nội dung LLM | Kinh doanh | `runs/R-S5-grade-20261119-164353-c6b996.json`, bảng phân khúc HCM-B2B; `R-S5-before-20261119-164353-c6b996`; `incidents/S5/card.md` |
 
 ---
 
@@ -315,9 +315,9 @@ python3 -m lab10.grade --incident Sx
 
 | Nhánh fault tree | Nguyên nhân | Chỗ sửa (hàm + nhánh trong `guards.py`, hoặc khoá trong `operating_gates.json`) | Tầng (phát hiện / chặn / giới hạn thiệt hại / vận hành) | GIẢM khả năng hay NGĂN hẳn? Vì sao | Mã lần chạy sau khi sửa |
 |---|---|---|---|---|---|
-| [1] | | | | | |
-| [2] | | | | | |
-| [3] | | | | | |
+| [1] | Ticket HCM-B2B luôn chuyển người sau khi agent đã đọc và phát sinh chi phí máy | Nếu scope giữ nguyên, 12 ticket/ngày của kho có escalation 100%; chi phí 10.382đ/ticket > 10.000đ làm tay, chưa kể phí trực phân bổ | Tạm chuyển HCM-B2B sang xử lý thủ công hoặc giữ ngoài phạm vi tự động trong pilot, tiếp tục đo. Mở lại tự động khi escalation giảm và chi phí đầy đủ theo kho ≤ 8.000đ/ticket, ROI đạt ≥ 0,25; giữ phạm vi pilot khác lớn hơn 0. | Tầng kinh doanh / phạm vi; đây là đề xuất để nhóm quyết, chưa sửa config | Đổi `pilot_scope` sang các kho khác, không thu hẹp độ phủ về 0; giữ S5-incident ngoài tự động hoá cho đến khi có bằng chứng kinh tế đạt. | Chưa quyết định/áp dụng; cần nhóm và Quyền xác nhận. |
+| [2] | Tiền LLM phụ thuộc độ dài nội dung, có ticket vượt trần | Base: ticket đắt nhất 2.412đ > trần 1.500đ; prepared/after: 768đ | Dừng đọc ticket vượt ngân sách LLM, chuyển người trước khi thêm chi phí | Tầng giới hạn chi phí; trần `cost_budget_per_ticket_vnd` đã đặt 1.500đ nhưng cần xác minh cổng áp dụng đúng với mọi lượt đọc | Giữ trần 1.500đ và kiểm tra cả retry/đọc bổ sung trong trace; không nâng trần để cải thiện số liệu | Chờ Quang kiểm tra và chạy lại. |
+| [3] | Hoàn lặp làm phát sinh thiệt hại tài chính độc lập với chi phí xử lý | Gói S5: hoàn sai 890.000đ tổng; HCM-B2B 0đ, các khoản phát sinh ở kho khác; sổ có nhiều yêu cầu cùng đơn | Chặn ghi hoàn trùng theo order/customer và ledger trước `issue_refund`; chuyển người khi trạng thái sổ không rõ | Tầng hành động / ledger; giảm hoặc ngăn tùy độ tin cậy và tính đầy đủ của ledger | Không đánh đổi kiểm tra an toàn để hạ chi phí; báo riêng hoàn sai trong ROI và risk monitoring | Chờ Quang kiểm tra trace, nhóm xác nhận cách sửa. |
 
 ---
 
@@ -330,14 +330,14 @@ Thẻ S5 dùng mục này cho một con số kinh doanh: chi phí mỗi ticket t
 
 | | Chỉ số theo dõi mới của bàn |
 |---|---|
-| **Tên trong `MONITORS`** | |
-| **Bước / hành vi được đo** | |
-| **Thước đo** (một câu, có đơn vị) | |
-| **Dữ liệu** (trường nào của trial, không có nhãn) | |
-| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | |
-| **Khung thời gian / ngưỡng báo động** | |
-| **Điểm mù** (chỉ số này KHÔNG thấy gì) | |
-| Giá trị trên bộ nền · trên thẻ (đọc mục `monitor` của report) | |
+| **Tên trong `MONITORS`** | `cost_per_ticket_by_warehouse` (đề xuất, chưa được đăng ký trong monitor hiện có) |
+| **Bước / hành vi được đo** | Tổng chi phí agent, công người duyệt/trực và tiền thiệt hại được phân bổ trên mỗi ticket theo kho. |
+| **Thước đo** (một câu, có đơn vị) | Chi phí đầy đủ bình quân, VNĐ/ticket, tách theo `warehouse_id`. |
+| **Dữ liệu** (trường nào của trial, không có nhãn) | `warehouse_id`, `cost_vnd`, `review_units`, `review_kind`, số ticket mỗi kho; `reviewer_standby_fee_vnd` và `review_cost_per_ticket_vnd` trong `ops_facts`. Theo dõi `wrongful_refund_vnd` thành khoản thiệt hại riêng. |
+| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | Báo riêng ba khoản: tiền agent/ticket = tổng `cost_vnd` / số ticket; công duyệt/ticket = tổng `review_units` × 10.000đ / số ticket; phí trực phân bổ/ticket = phí trực ngày × tỷ trọng ticket kho trong tổng ticket. Tổng chi phí vận hành là tổng ba khoản. Ghi tiền hoàn sai thành tổn thất riêng, không trộn vào chi phí phân khúc. Thiếu `warehouse_id` thì xếp nhóm “?”; thiếu khoản chi phí thì báo không đủ dữ liệu, không coi là 0. |
+| **Khung thời gian / ngưỡng báo động** | Theo mỗi lần chạy và tổng hợp hằng ngày trong pilot. Báo động khi chi phí > 10.000đ/ticket làm tay; mục tiêu nội bộ ≤ 8.000đ và ROI ≥ 0,25. |
+| **Điểm mù** (chỉ số này KHÔNG thấy gì) | Không chỉ ra nguyên nhân chi phí cao nếu không xem breakdown; nhóm kho ít ticket có thể dao động. Không thấy thiệt hại không được ghi vào ledger. |
+| Giá trị trên bộ nền · trên thẻ (đọc mục `monitor` của report) | Monitor mới chưa có trong code/report (`monitor ❌`). S5 after, HCM-B2B 12 ticket/ngày, escalation 100%, chi phí phân khúc 10.382đ/ticket = khoảng 382đ agent + 10.000đ công duyệt/ticket. Phí trực toàn nhóm 30.000đ/ngày chưa được phân bổ theo kho; nếu phân bổ theo tỷ lệ 12/30 thì thêm 12.000đ/ngày (1.000đ/ticket) cho HCM-B2B. Hoàn sai HCM-B2B = 0đ, trong khi toàn gói thiệt hại hoàn sai 178.000đ/ngày. ROI toàn gói -0,38. Không cộng phí trực hoặc thiệt hại này lần nữa vào số 10.382đ của report phân khúc. |
 
 ---
 
@@ -369,7 +369,7 @@ Vẽ lại cây ở C6. Ở mỗi nhánh đã xử lý, thêm một nút `VÀ [g
 
 | Rủi ro | Khả năng | Tác động | Người phụ trách (PIC, một người) | Dấu hiệu (metric nào, ngưỡng nào) | Xử lý | Ảnh hưởng bước đánh giá | Nhóm chức năng (GOVERN / MAP / MEASURE / MANAGE) |
 |---|---|---|---|---|---|---|---|
-| | | | | | | | |
+| Ticket ở HCM-B2B tiếp tục đắt hơn làm tay vì 100% ticket chuyển người, đồng thời có thể phát sinh thêm chi phí trực phân bổ | Cao trong gói S5; 12/12 ticket/ngày chuyển người | Tăng chi phí và làm ROI toàn pilot âm; HCM-B2B 10.382đ/ticket trước phân bổ trực so với 10.000đ làm tay, phí trực phân bổ ước tính thêm 1.000đ/ticket; ROI gói -0,38 | Nguyễn Năng Thịnh | Report `by_segment`: HCM-B2B `cost_per_ticket_vnd` > 10.000đ hoặc `review_rate` = 1,0; báo động nếu chi phí đầy đủ > 8.000đ mục tiêu và ROI < 0,25 | Đề xuất tạm chuyển HCM-B2B sang thủ công, giữ các kho khác trong pilot; chỉ mở lại khi chi phí và ROI đạt ngưỡng sau đo lại. Không sửa config trước khi Quyền xác nhận luồng thủ công và nhóm chốt phạm vi. | Cân nhắc thu hẹp phạm vi pilot ở C12; không chọn Tiếp tục khi report còn vượt trần | MEASURE / MANAGE |
 
 Quy tắc: **mỗi dòng phải đổi được một quyết định.** Cột "Dấu hiệu" phải là một metric có trong `monitors.py` hoặc trong report.
 
