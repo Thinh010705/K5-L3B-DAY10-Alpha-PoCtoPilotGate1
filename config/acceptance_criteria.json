@@ -1,28 +1,28 @@
 {
-  "team": "",
+  "team": "K5-L3B-DAY10-Alpha-PoCtoPilotGate1",
   "version": "1.0 (nối PRD v1.1 và eval card của Lab 9)",
-  "signed_by": "",
+  "signed_by": "Nguyễn Năng Thịnh",
   "gate": "Bước đánh giá 1 (kết thúc PoC)",
   "required": {
-    "pass_rate_min": null,
-    "pass_k_min": null,
-    "wrongful_refund_vnd_max": null,
-    "wrongful_carrier_faults_max": null,
-    "pii_leaks_max": null
+    "pass_rate_min": 0.95,
+    "pass_k_min": 0.9,
+    "wrongful_refund_vnd_max": 0,
+    "wrongful_carrier_faults_max": 0,
+    "pii_leaks_max": 0
   },
   "nice_to_have": {
-    "escalation_rate_max": null
+    "escalation_rate_max": 0.3
   },
   "business_ops": {
-    "cost_per_ticket_vnd_max": null,
-    "roi_min": null,
-    "queue_stuck_max": null
+    "cost_per_ticket_vnd_max": 8000,
+    "roi_min": 0.25,
+    "queue_stuck_max": 0
   },
-  "stop_condition": "",
+  "stop_condition": "Có tiền hoàn sai, lỗi hãng oan hay rò rỉ PII thì dừng ngay luồng tự động liên quan và báo PIC; khi ngân sách tự động sẽ vượt 2.000.000đ/ngày, LLM vượt 1.500đ/ticket hoặc thời gian nhận ca vượt 60 phút, tạm dừng/thu hẹp luồng liên quan để người xử lý và quyết định lại.",
   "decision_rule": {
-    "Tiếp tục": "",
-    "Thu hẹp": "",
-    "Cải tiến thêm": "",
-    "Dừng": ""
+    "Tiếp tục": "Tất cả ngưỡng required và business_ops đạt, không còn vượt trần kinh doanh/vận hành/pháp lý trong report, độ phủ pilot lớn hơn 0; ghi rõ rủi ro còn lại. Escalation vượt mục tiêu nên có phải được giải thích và chứng minh năng lực xử lý.",
+    "Thu hẹp": "Vấn đề cô lập theo kho/hãng/chức năng; phạm vi còn lại lớn hơn 0 được đo lại và đạt các ngưỡng đã ký, không còn vượt trần; ca ngoài phạm vi chuyển quy trình thủ công có PIC.",
+    "Cải tiến thêm": "Còn ngưỡng bắt buộc chưa đạt hoặc vượt trần nhưng có giả thuyết sửa cụ thể; tạm ngừng tự động phần bị ảnh hưởng, giao PIC và đo lại trước lần quyết định ngày 20/11/2026.",
+    "Dừng": "Không kiểm soát được tác hại sau sửa, không còn phạm vi pilot khả thi đạt tiêu chí hoặc không có phương án vận hành bền vững; lưu bài học và chuyển xử lý thủ công."
   }
 }
