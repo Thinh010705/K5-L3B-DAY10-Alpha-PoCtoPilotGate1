@@ -31,7 +31,7 @@ Mọi con số trong quyết định Gate 1 phải trỏ về một dòng ở đ
 |---|---|---|---|---|---|---|---|---|
 | 1 | `R-base-before-20261119-145535-bde05c` | base · base | (baseline, chưa có cổng) | 0.9909 [0.9727; 1.0] | 0.9545 | 20000đ · 1 lỗi · 0 PII | 0.2273 | Chưa đạt tiêu chí an toàn bắt buộc vì ticket T-002@55 bị model đè số ngày dẫn đến hoàn sai và phạt oan. |
 | 2 | `R-base-after-20261119-150850-242a5f` | base · after | Cổng vòng 1: đối soát CSDL tracking trước khi hoàn/phạt | 1.0 [1.0; 1.0] | 1.0 | 0đ · 0 lỗi · 0 PII | 0.2273 | Đạt 100% tất cả chỉ số an toàn và ngưỡng required nhờ cổng write_gate đối chiếu CSDL tracking; khắc phục hoàn toàn vé T-002@55. |
-| 3 | | base · prepared | (cổng vòng 1 đã chốt) | | | | | |
+| 3 | `R-base-prepared-20261119-162435-f44f82` | base · prepared | Cổng vòng 1 đã chốt (checkpoint `099fd671`) | 1.0 [1.0; 1.0] | 1.0 | 0đ · 0 lỗi · 0 PII | 0.2273 | Đạt 100% tất cả các chỉ số bắt buộc và ngưỡng vận hành/kinh doanh; không có dòng vượt trần nào; đủ điều kiện ra quyết định v1. |
 | 4 | | | | | | | | |
 
 ---
@@ -382,22 +382,22 @@ bao nhiêu thời gian? (3) Có phần nào của dự án không nên làm ti�
 
 | | **v1** (phút 105–115, TRƯỚC khi nhận thẻ sự cố) |
 |---|---|
-| Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | |
-| Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) | |
-| Mã lần chạy dùng làm bằng chứng | bộ nền, mốc base: `R-base-before-20261119-144726-b45eeb` · bộ nền với cổng vòng 1 (prepared): chờ đo sau khi chốt cổng |
-| Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | |
-| Kho hoặc hãng có số xấu nhất: ____. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? *(Đọc khối "theo kho và hãng" ở cuối output `lab10.eval` / `lab10.grade`, hoặc mục `by_segment` trong `report.json`.)* | |
-| Quyết định (khoanh một) | Tiếp tục · Thu hẹp · Cải tiến thêm · Dừng |
-| Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | **An toàn và chất lượng.** `R-base-before-20261119-144726-b45eeb`: chưa đạt vì hoàn sai **20.000đ** và ghi oan **1 lỗi hãng** tại HCM/VNX (`T-002@55`), đều vượt ngưỡng 0. Đạt `pii_leaks = 0`, `pass_rate = 99,09%` (ngưỡng ≥ 95%) và `pass^5 = 95,45%` (ngưỡng ≥ 90%). **Cần bổ sung từ `prepared`:** mã lần chạy, cả năm chỉ số, kết quả `T-002@55` và các ca mới hỏng nếu có. |
-| Bằng chứng 2 | **Chi phí, ROI và dòng tiền.** `R-base-before-20261119-144726-b45eeb`: **4.203đ/ticket** (ngưỡng ≤ 8.000đ), **ROI 1,34** (ngưỡng ≥ 0,25), **670đ** tiền LLM cao nhất/ticket và **155.000đ** hoàn tự động cao nhất/ngày. **Cần bổ sung từ `prepared`:** mã lần chạy và các giá trị tương ứng, so với trần tiền LLM **1.500đ/ticket** và trần hoàn tự động vòng 1 **500.000đ/ngày**. Đọc thêm chi phí theo kho, vì nhóm chưa xác định kho (`?`) tốn **10.359đ/ticket** ở baseline. |
-| Bằng chứng 3 | **Hàng chờ và phạm vi.** `R-base-before-20261119-144726-b45eeb`: độ phủ **100% (22 ticket)**, chuyển người **22,73%** (mục tiêu ≤ 30%), trung bình **5 ca/ngày**, chờ lâu nhất **0 phút** và **0 ca ùn** (ngưỡng ≤ 0), với **1 người** duyệt được **6 ca/giờ**. **Cần bổ sung từ `prepared`:** mã lần chạy, độ phủ, số người trực, công suất, tỷ lệ chuyển người, chờ lâu nhất, ca ùn và kết quả theo kho/hãng để xem có cần đổi phạm vi hay không. |
-| Khớp dòng nào trong `decision_rule` đã ký? | |
-| Nếu Thu hẹp: cắt phần nào, vì sao | |
-| Nếu Cải tiến thêm: giả thuyết cụ thể + hạn | |
-| Nếu Dừng: bài học ghi lại | |
-| Một bằng chứng còn thiếu (thứ bộ nền chưa đo được) | |
-| Ngày quyết định lại (trừ khi Dừng) | |
-| PIC ký | |
+| Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | `908902d` |
+| Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) | `099fd671` |
+| Mã lần chạy dùng làm bằng chứng | bộ nền, mốc base: `R-base-before-20261119-145535-bde05c` · bộ nền với cổng vòng 1 (prepared): `R-base-prepared-20261119-162435-f44f82` |
+| Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | Không có dòng nào vượt trần. |
+| Kho hoặc hãng có số xấu nhất: ____. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? *(Đọc khối "theo kho và hãng" ở cuối output `lab10.eval` / `lab10.grade`, hoặc mục `by_segment` trong `report.json`.)* | Phân khúc chưa xác định kho (`?`) có chi phí 10.359đ/ticket > 10.000đ do số lượng ca ít và có ca chuyển người; tuy nhiên cả 4 kho thực tế (HN, HCM, DN, CT) đều đạt pass_rate 100% và chi phí chỉ 665đ - 4.646đ/ticket. Quyết định không đổi vì các kho triển khai thực tế đều đạt hiệu quả cao. |
+| Quyết định (khoanh một) | **Tiếp tục** |
+| Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | **An toàn và chất lượng:** Mã lần chạy `R-base-prepared-20261119-162435-f44f82` đạt 100% cả 5 chỉ số bắt buộc: `pass_rate = 1.0` (ngưỡng ≥ 0.95), `pass_k = 1.0` (ngưỡng ≥ 0.90), `wrongful_refund_vnd = 0đ` (ngưỡng ≤ 0đ), `wrongful_carrier_faults = 0` (ngưỡng ≤ 0), `pii_leaks = 0` (ngưỡng ≤ 0). Lỗi `T-002@55` đã được khắc phục triệt để nhờ cổng `write_gate`, không có ca mới nào bị hỏng. |
+| Bằng chứng 2 | **Chi phí, ROI và dòng tiền:** Mã lần chạy `R-base-prepared-20261119-162435-f44f82` đạt chi phí mỗi ticket **4.456đ** (ngưỡng ≤ 8.000đ), **ROI 1.24** (ngưỡng ≥ 0.25), tiền LLM cao nhất **770đ** (trần 1.500đ), và tổng tiền hoàn tự động trong ngày **155.000đ** (dưới trần 500.000đ bàn đặt và ngân sách 2.000.000đ của Finance). |
+| Bằng chứng 3 | **Hàng chờ và phạm vi:** Mã lần chạy `R-base-prepared-20261119-162435-f44f82` đạt độ phủ **100% (22/22 ticket)**, tỷ lệ chuyển người **22.73%** (mục tiêu ≤ 30%), thời gian chờ người duyệt lâu nhất **0.0 phút**, **0 ca bị ùn** (ngưỡng ≤ 0 ca) với năng lực 1 người trực duyệt 6 ca/giờ. |
+| Khớp dòng nào trong `decision_rule` đã ký? | Khớp dòng **Tiếp tục**: "Tất cả ngưỡng required và business_ops đạt, không còn vượt trần kinh doanh/vận hành/pháp lý trong report, độ phủ pilot lớn hơn 0; ghi rõ rủi ro còn lại." |
+| Nếu Thu hẹp: cắt phần nào, vì sao | N/A |
+| Nếu Cải tiến thêm: giả thuyết cụ thể + hạn | N/A |
+| Nếu Dừng: bài học ghi lại | N/A |
+| Một bằng chứng còn thiếu (thứ bộ nền chưa đo được) | Phản ứng thực tế và khiếu nại của khách hàng / hãng vận chuyển khi nhận kết quả; các sự cố lệch dữ liệu hoặc biến động tải đột biến ngoài thực tế (sẽ được kiểm chứng khi gặp sự cố ở vòng 2). |
+| Ngày quyết định lại (trừ khi Dừng) | 2026-11-20 |
+| PIC ký | Nguyễn Năng Thịnh (Trưởng nhóm) & Cao Minh Quang (Kỹ sư cổng) |
 
 Xong v1 thì lưu và đẩy một bản (sau mốc này không sửa cột v1):
 
