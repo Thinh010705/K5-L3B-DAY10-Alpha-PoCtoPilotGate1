@@ -1,12 +1,16 @@
 {
-  "team": "",
-  "members": [],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "team": "K5-L3B-DAY10-Alpha-PoCtoPilotGate1",
+  "members": [
+    "CaoMinhQuang-2A202603906",
+    "NguyenNangThinh-2A202604028",
+    "HoangMinhQuyen-2A202603961"
+  ],
+  "incident": "S5",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Thu hẹp",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Mọi khoản hoàn, kể cả khoản CSKH hoàn tay qua tổng đài, đều được ghi vào sổ cái ngay khi trả tiền, vì cổng chống hoàn trùng của đội chỉ thấy những gì đã có trong sổ cái.",
+    "reduce_or_prevent": "Cổng sổ cái NGĂN hoàn trùng và ghi lỗi lặp với mọi khoản đã có trong sổ cái vì nó đọc nguồn sự thật chứ không đọc chữ khách hay cờ đối soát đêm, nhưng chỉ GIẢM khả năng khi khoản hoàn tay chưa được nhập sổ; còn việc bỏ kho sỉ khỏi phạm vi chỉ tránh tiền máy chứ không bớt được công người.",
+    "measure_in_pilot": "Đo lại chi phí đầy đủ mỗi ticket theo kho (tiền LLM thật theo token, công duyệt và phí trực thật), tỉ lệ ticket lặp cho cùng một đơn, độ trễ ghi sổ của khoản hoàn tay ở tổng đài, và ROI của 4 kho đơn lẻ trong 2 tuần."
   }
 }

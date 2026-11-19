@@ -22,12 +22,22 @@ from . import helpers as H
 from .tools import Verdict
 
 
+# Vòng 2 (thẻ S5): số ký tự tối đa của ticket mà model được đọc. Phần dán kèm dài (danh sách hàng, trao đổi cũ)
+# chỉ làm tăng tiền LLM; quyết định tiền và lỗi hãng đã lấy từ CSDL (đơn, tracking, sổ cái), không lấy từ chữ khách.
+MAX_TICKET_CHARS = 600
+
+
 def pre_guard(ctx):
     # Cổng 1: Ghim phiên bản chính sách có hiệu lực theo ngày ctx.as_of (tránh drift index)
     policy = H.effective_policy(ctx.tools.lookup_policies(), ctx.as_of)
-    if policy:
-        return Verdict.allow(policy_id=policy["policy_id"])
-    return Verdict.allow()
+    pin = {"policy_id": policy["policy_id"]} if policy else {}
+
+    # Cổng 4 (vòng 2, S5): cắt phần dán kèm quá dài trước khi model đọc, để tiền LLM không vượt trần mỗi ticket
+    text = ctx.ticket.get("text") or ""
+    if len(text) > MAX_TICKET_CHARS:
+        return Verdict.rewrite(f"ticket dài {len(text)} ký tự: chỉ cho model đọc {MAX_TICKET_CHARS} ký tự đầu",
+                               text[:MAX_TICKET_CHARS], **pin)
+    return Verdict.allow(**pin)
 
 
 def write_gate(ctx, action):
@@ -45,12 +55,33 @@ def write_gate(ctx, action):
                 entitled = H.entitlement_vnd(policy, order, db_delay, parcel.get("delay_cause"))
                 amount = action.get("amount_vnd", 0)
                 approval_id = action.get("approval_id")
+                # Cổng 5 (vòng 2, S5): đối chiếu SỔ CÁI (nguồn sự thật về tiền đã trả), không tin cờ refund_status
+                # cập nhật theo đợt đêm. Gồm cả khoản CSKH đã hoàn tay và lần ghi lặp khi model báo lỗi xác nhận.
+                rows = ctx.tools.ledger_rows(order_id=order_id)
+                already = sum(r["amount_vnd"] for r in rows)
 
-                # Không có phê duyệt đặc biệt mà số tiền vượt quyền lợi tính từ CSDL tracking
-                if not approval_id and amount > entitled:
-                    if entitled == 0:
-                        return Verdict.deny("Đơn hàng không đủ điều kiện hoàn tiền theo CSDL tracking")
-                    return Verdict.modify("Điều chỉnh số tiền hoàn theo CSDL tracking", amount_vnd=entitled)
+                if approval_id:
+                    if any(r.get("approval_id") == approval_id for r in rows):
+                        return Verdict.deny("Phê duyệt này đã được dùng cho một khoản hoàn trong sổ cái")
+                else:
+                    # Không có phê duyệt đặc biệt: tổng đã hoàn + lần này không vượt quyền lợi tính từ CSDL tracking
+                    remaining = max(0, entitled - already)
+                    if amount > remaining:
+                        if remaining == 0:
+                            if already > 0:
+                                return Verdict.deny("Sổ cái đã có khoản hoàn đủ quyền lợi cho đơn này (hoàn trùng)")
+                            return Verdict.deny("Đơn hàng không đủ điều kiện hoàn tiền theo CSDL tracking")
+                        return Verdict.modify("Điều chỉnh số tiền hoàn theo CSDL tracking và phần đã hoàn trong sổ cái",
+                                              amount_vnd=remaining)
+
+                    # Cổng 6 (vòng 2): trần hoàn tự động cho MỘT khách trong ngày (ops_limits, đã thống nhất với Finance)
+                    cap_customer = ctx.tools.ops_limits().get("max_auto_refund_per_customer_per_day_vnd")
+                    if cap_customer is not None:
+                        cust = order.get("customer_id")
+                        today = sum(r["amount_vnd"] for r in ctx.tools.ledger_rows(customer_id=cust)
+                                    if not r.get("approval_id") and r.get("basis") != "manual")
+                        if today + amount > cap_customer:
+                            return Verdict.escalate("vượt trần hoàn tự động cho một khách trong ngày: chuyển người duyệt")
 
     # Cổng 3: Kiểm soát lệnh ghi lỗi cho hãng (file_carrier_fault) theo CSDL tracking
     if tool == "file_carrier_fault":
@@ -62,5 +93,8 @@ def write_gate(ctx, action):
             policy = H.effective_policy(ctx.tools.lookup_policies(), ctx.as_of)
             if policy and not H.carrier_at_fault(policy, parcel, db_delay):
                 return Verdict.deny("CSDL tracking không ghi nhận lỗi giao trễ do hãng vận chuyển")
+            # Cổng 7 (vòng 2, S5): không ghi lỗi lần hai cho cùng một kiện (ticket lặp, ghi lặp)
+            if ctx.tools.fault_rows(order_id=order_id, parcel_id=action.get("parcel_id")):
+                return Verdict.deny("Kiện này đã bị ghi lỗi cho hãng trước đó")
 
     return Verdict.allow()

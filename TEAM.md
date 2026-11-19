@@ -2,9 +2,9 @@
 
 ## Thông tin nhóm
 
-- Tên nhóm (`TenNhom`, không dấu, không khoảng trắng):
-- Lớp: `L3A` / `L3B`
-- Repo của bàn: `K5-<L3A|L3B>-DAY10-<TenNhom>-PoCtoPilotGate1`
+- Tên nhóm (`TenNhom`, không dấu, không khoảng trắng): Alpha
+- Lớp: `L3B`
+- Repo của bàn: `K5-L3B-DAY10-Alpha-PoCtoPilotGate1`
 - Thẻ sự cố đã bốc (S1–S8): S5
 
 ## Thành viên
@@ -24,7 +24,7 @@ Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, k
 
 Mỗi thành viên tự viết một mục bên dưới (chép mẫu, đổi tiêu đề thành họ tên không dấu và MSSV, ví dụ `## NguyenVanAn-20241234`).
 
-## CaoMinhQuang-MSSV
+## CaoMinhQuang-2A202603906
 
 ### Phần việc phụ trách
 
@@ -47,7 +47,7 @@ Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
 
 Một điều học được, một điều còn chưa chắc.
 
-## NguyenNangThinh-MSSV
+## NguyenNangThinh-2A202604028
 
 ### Phần việc phụ trách
 
@@ -70,7 +70,7 @@ Bổ sung mã commit, mã lần chạy và mục phiếu liên quan sau khi th�
 
 Tự viết một điều học được và một điều còn chưa chắc.
 
-## HoangMinhQuyen-MSSV
+## HoangMinhQuyen-2A202603961
 
 ### Phần việc phụ trách
 
@@ -84,12 +84,19 @@ Vai: **Vận hành và pháp lý**.
 
 ### Đóng góp cụ thể
 
-Tự bổ sung sau khi thực hiện công việc.
+- Phiếu B: viết Runbook 1–3 (B7.5) và mục Giờ cao điểm (B7.6) khớp `operations`/`legal`; ghi chú sửa hai chỗ lệch ở B4 (trường PII bị chặn, trần hoàn ngày).
+- Thẻ S5: xác nhận luồng thủ công cho kho HCM-B2B (ngoài `pilot_scope`, trưởng ca `NV-HANH` xử lý); thêm 2 câu `operations.stop_conditions` (hoàn trùng; kho đắt hơn làm tay).
+- Phiếu C: C3.5, C4 (HAZOP thẻ), C5 câu 3.3, C9, C10 (dòng rủi ro hoàn tay chưa ghi sổ), C11 (checklist cập nhật, Runbook 4–5); phối hợp C2, C6–C8, C12.
+- Phối hợp cổng vòng 2 trong `lab10/guards.py` (đối chiếu sổ cái chống hoàn trùng, chặn ghi lỗi lặp, cắt ticket dài) và 2 monitor trong `lab10/monitors.py`.
+- Điền `submission/submission.json`, chạy lệnh 6 và lệnh 7.
+- Có dùng trợ lý AI (Claude) để đọc code, dò trace, gợi ý cách viết cổng và soát câu chữ trong phiếu; các con số và quyết định đã được đối chiếu với report.
 
 ### Bằng chứng
 
-Bổ sung mã commit, mã lần chạy và mục phiếu liên quan sau khi thực hiện.
+- Mã lần chạy: `R-S5-grade-20261119-192648-771c82` (PASS-VISIBLE), `R-S5-after-20261119-192647-771c82`, `R-base-after-20261119-192647-771c82`, `R-S5-after-20261119-192337-c1f60f` (chỉ thu hẹp phạm vi, ROI -0,97).
+- Phiếu B mục B7.5–B7.6; Phiếu C mục C0 (dòng 5–9), C3.5, C4, C5, C9–C12.
 
 ### Exit ticket
 
-Tự viết một điều học được và một điều còn chưa chắc.
+- Học được: một cổng chỉ chắc chắn khi đọc đúng nguồn sự thật. Ở thẻ S5, cổng vòng 1 so số tiền với quyền lợi nhưng không đọc sổ cái nên bỏ lọt hoàn trùng; và chỉ thu hẹp phạm vi mà không sửa nguyên nhân còn làm ROI tệ hơn (-0,97).
+- Chưa chắc: ngoài thực tế tổng đài CSKH có ghi khoản hoàn tay vào sổ cái kịp thời không; nếu không, cổng chống hoàn trùng chỉ giảm chứ không ngăn được.

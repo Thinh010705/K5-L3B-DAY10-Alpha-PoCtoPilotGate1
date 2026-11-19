@@ -14,12 +14,49 @@ lab10.grade kiểm: monitor chạy không lỗi, và giá trị trên gói sự 
 tức là monitor "sáng đèn" khi sự cố xảy ra.
 """
 
+# Số liệu mock trong data/world.json -> ops_facts (công một ca chuyển người; kiểm lại có ghi chú chỉ tốn 0,4 ca).
+REVIEW_COST_VND = 10000
+RECHECK_UNITS = 0.4
+
 
 def escalation_rate(trials):
     return sum(t["status"] == "escalated" for t in trials) / max(1, len(trials))
 
 
+def worst_warehouse_cost_per_ticket_vnd(trials):
+    """Thẻ S5 · con số kinh doanh: chi phí mỗi ticket (tiền máy + công người) ở KHO ĐẮT NHẤT, đ/ticket.
+
+    Tiền máy = cost_vnd; công người = 10.000đ nếu chuyển người, 0,4 x 10.000đ nếu nhân viên kiểm lại.
+    Tiền hoàn sai KHÔNG cộng vào đây (đo riêng ở repeat_refund_claim_rate). Thiếu kho thì xếp nhóm "?".
+    So với làm tay 10.000đ/ticket: vượt 10.000đ là kho đó tự động hoá đang lỗ.
+    """
+    by_wh = {}
+    for t in trials:
+        human = {"escalated": 1.0, "recheck": RECHECK_UNITS}.get(t.get("review_kind"), 0.0) * REVIEW_COST_VND
+        by_wh.setdefault(t.get("warehouse") or "?", []).append((t.get("cost_vnd") or 0) + human)
+    return max((sum(v) / len(v) for v in by_wh.values()), default=0.0)
+
+
+def repeat_refund_claim_rate(trials):
+    """Thẻ S5 · tiền mất: tỉ lệ ticket hỏi tiền cho một đơn mà trong CÙNG ngày đã có ticket khác của đơn đó.
+
+    Không cần nhãn: chỉ đếm order_id lặp lại trong một ngày vận hành (cùng day, cùng seed).
+    Sáng đèn khi khách gửi lại yêu cầu qua kênh khác — chính là đầu vào gây hoàn hai, ba lần.
+    """
+    seen, repeats = set(), 0
+    for t in sorted(trials, key=lambda t: (t["day"], t["seed"], t.get("arrive_min") or 0, t["ticket_id"])):
+        key = (t["day"], t["seed"], (t.get("ticket") or {}).get("order_id"))
+        if key[2] is None:
+            continue
+        if key in seen:
+            repeats += 1
+        seen.add(key)
+    return repeats / max(1, len(trials))
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
+    "worst_warehouse_cost_per_ticket_vnd": worst_warehouse_cost_per_ticket_vnd,
+    "repeat_refund_claim_rate": repeat_refund_claim_rate,
 }
 STARTER_MONITORS = ("escalation_rate",)

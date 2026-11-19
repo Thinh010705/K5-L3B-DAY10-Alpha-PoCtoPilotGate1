@@ -23,7 +23,9 @@
     "max_queue_wait_minutes": 60,
     "stop_conditions": [
       "Khi có 1 lỗi ghi oan cho hãng thì tạm dừng file_carrier_fault",
-      "Khi có 1 sự cố lộ dữ liệu PII thì dừng gửi thông tin cho bên thứ ba"
+      "Khi có 1 sự cố lộ dữ liệu PII thì dừng gửi thông tin cho bên thứ ba",
+      "Khi sổ cái có 1 khoản hoàn trùng cho cùng một đơn thì tắt issue_refund tự động và chuyển người duyệt",
+      "Khi chi phí mỗi ticket của một kho vượt 10.000đ (làm tay) trong 1 ngày thì đưa kho đó ra khỏi pilot_scope"
     ],
     "alert_channel": "slack://ops-alerts",
     "decision_note": true,
