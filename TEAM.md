@@ -37,15 +37,22 @@ Vai: **Kỹ sư cổng**.
 
 ### Đóng góp cụ thể
 
-...
+- Chạy đánh giá baseline trên bộ nền, đọc report và khối "theo kho và hãng"; xác định hai ngưỡng đã ký chưa đạt (hoàn sai 20.000đ, 1 lỗi ghi oan cho hãng VNX) ở Phiếu B mục B0–B1.
+- Dò trace `T-002@55` và điền bảng soát lỗi (B2): model đè số ngày trễ khách tự khai (5 ngày) lên CSDL tracking (2 ngày), dẫn tới hoàn sai và ghi lỗi oan, xếp loại lỗi chìm.
+- Viết 3 cổng vòng 1 trong `lab10/guards.py` (B7.1): ghim phiên bản chính sách có hiệu lực trong `pre_guard`; trong `write_gate`, kiểm tra số tiền hoàn theo `entitlement_vnd` từ tracking và chặn ghi lỗi hãng khi `carrier_at_fault` sai.
+- Viết hai bước tránh rò rỉ dữ liệu (B7.2) và behavioral test với hai ticket hiểm chạy bằng `--adhoc` (B7.3); bộ nền đạt pass_rate 1,0, không ca nào mới hỏng.
+- Chốt cổng vòng 1 (`lab10.checkpoint`, hash `099fd671`), chạy mốc `prepared` và cùng ký quyết định v1 (B8).
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
+- Commit: `11d013b` (cổng vòng 1, B0, B1, B2, B7.1–B7.3), `0ff2f64` (chốt cổng vòng 1, quyết định v1).
+- Mã lần chạy: `R-base-before-20261119-145535-bde05c` (baseline), `R-base-after-20261119-150850-242a5f` (cổng vòng 1), `R-base-prepared-20261119-162435-f44f82` (mốc prepared).
+- Phiếu B mục B0–B2, B7.1–B7.3, B8 (dòng "PIC ký").
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+- Học được: cổng phải đọc nguồn sự thật (CSDL tracking) chứ không đọc lời khách khai; nhờ vậy một cổng viết theo quan hệ dữ liệu đã xử lý được `T-002@55` mà không cần viết luật riêng cho mã ticket.
+- Chưa chắc: cổng vòng 1 chỉ so từng ticket với quyền lợi, chưa nhìn tổng đã hoàn trong sổ cái, nên chưa biết nó đứng vững ra sao trước các ticket lặp hay đơn mới trong bộ kiểm tra ẩn.
 
 ## NguyenNangThinh-2A202604028
 
@@ -93,6 +100,7 @@ Vai: **Vận hành và pháp lý**.
 
 ### Bằng chứng
 
+- Commit: `10972d5` (cổng và monitor vòng 2, điều kiện dừng, Phiếu B mục B7.5–B7.6, Phiếu C, `submission/`).
 - Mã lần chạy: `R-S5-grade-20261119-192648-771c82` (PASS-VISIBLE), `R-S5-after-20261119-192647-771c82`, `R-base-after-20261119-192647-771c82`, `R-S5-after-20261119-192337-c1f60f` (chỉ thu hẹp phạm vi, ROI -0,97).
 - Phiếu B mục B7.5–B7.6; Phiếu C mục C0 (dòng 5–9), C3.5, C4, C5, C9–C12.
 
